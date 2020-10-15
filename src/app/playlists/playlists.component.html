@@ -1,0 +1,38 @@
+<div class="row mt-1">
+  <div class="col">
+    <h4 class="display-3 float-right mb-2">Twoje Playlisty</h4>
+  </div>
+</div>
+
+<div class="row mt-1">
+  <!-- <div class="col">
+    <div [ngSwitch]="mode">
+
+      <app-content-card title="Playlista" *ngSwitchDefault>
+        <p>Wybierz playlistę</p>
+      </app-content-card>
+
+      <app-content-card title="Playlista {{selected.name}}" *ngSwitchCase="'selected'">
+        <app-playlist-detail (edited)="edit($event)" [playlist]="selected"></app-playlist-detail>
+      </app-content-card>
+
+      <app-content-card title="Playlista {{selected.name}} - edycja" *ngSwitchCase="'edit'">
+        <app-playlist-form [playlist]="edited" (saved)="save($event)"></app-playlist-form>
+      </app-content-card>
+
+    </div> -->
+    <div class="col">
+      <app-content-card>
+       <router-outlet></router-outlet>
+      </app-content-card>
+    </div>
+    <div class="col">
+
+      <app-playlists-list (selectedPlaylist)="select($event)" [playlists]="playlists" [selected]="selected">
+      </app-playlists-list>
+
+      <div class="form-group">
+        <button class="btn btn-success float-xs-right" (click)="createNew()">Nowa Playlista</button>
+      </div>
+    </div>
+  </div>
