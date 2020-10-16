@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, ChildActivationStart, Router } from '@angular/router';
+import { PlaylistsService } from './playlists.service';
 
 @Component({
   selector: 'app-playlist-form',
   template: `
-      <div>
+      <div *ngIf="playlist">
         <div class="form-group">
           <label>Nazwa:</label>
           <input type="text" [(ngModel)]="playlist.name" class="form-control">
@@ -29,19 +31,30 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   ]
 })
 export class PlaylistFormComponent implements OnInit {
-  @Input()
+
   playlist;
 
-  @Output()
-  saved = new EventEmitter();
-
   save(playlist): void {
-    this.saved.emit(playlist);
+    this.playlistsService.savePlaylist(playlist);
+    this.router.navigate(['playlist', playlist.id ]);
   }
 
-  constructor() { }
+  constructor(private activeRoute: ActivatedRoute,
+              private playlistsService: PlaylistsService,
+              private router: Router) { }
 
   ngOnInit(): void {
+    this.activeRoute.params.subscribe(params => {
+      // tslint:disable-next-line: radix
+      const id = parseInt(params.id);
+      if (id) {
+        const playlist = this.playlistsService.getPlaylist(id);
+        this.playlist = Object.assign({}, playlist); // <--- KOPIA DO EDYCJI FORMULARZA
+      } else {
+        this.playlist = this.playlistsService.createPlaylist();
+      }
+    }
+    );
   }
 
 }

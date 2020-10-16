@@ -13,8 +13,10 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let playlist of playlists, let i = index" class="playlist-row" [ngClass]="{'table-active': selected == playlist}" [ngStyle]="{ borderBottomColor:playlist.color }"
-          [routerLink]=[playlist.id]>
+        <tr *ngFor="let playlist of playlists, let i = index" class="playlist-row"
+        [ngClass]="{'table-active': selected == playlist}"
+        [ngStyle]="{ borderBottomColor:playlist.color }"
+        [routerLink]=[playlist.id]>
           <td> {{ i + 1 }} </td>
           <td> {{ playlist.name }} </td>
           <td> {{ playlist.tracks }} </td>
@@ -28,7 +30,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
   `,
   styles: [`
     .playlist-row {
-      border-bottom: 2px solid transparent;
+      border-bottom: 3px solid transparent;
     }
   `]
 })

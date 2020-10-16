@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { PlaylistsService } from './playlists.service';
 import playlistsData from './playlists.data';
 import { routerModule } from './playlists.routing';
+import { AppModule } from '../app.module';
 
 @NgModule({
   declarations: [

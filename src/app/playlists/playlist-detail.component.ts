@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlaylistsService } from './playlists.service';
 
 @Component({
@@ -19,26 +19,30 @@ import { PlaylistsService } from './playlists.service';
   ]
 })
 export class PlaylistDetailComponent implements OnInit {
-  @Input()
+
   playlist;
 
-  @Output()
-  edited = new EventEmitter<any>();
-
   edit(playlist): void {
-    this.edited.emit(playlist);
+    this.router.navigate(['playlist', playlist.id, 'edit']);
   }
 
-  constructor( private activeRoute: ActivatedRoute,
-               private playlistsService: PlaylistsService ) {
+  constructor(private activeRoute: ActivatedRoute,
+              private playlistsService: PlaylistsService,
+              private router: Router ) {
     // tslint:disable-next-line: radix
-    const id = parseInt(this.activeRoute.snapshot.params.id);
-    if (id) {
-      this.playlist = this.playlistsService.getPlaylist(id)
-    }
-               }
+    // const id = parseInt(this.activeRoute.snapshot.params.id);
+    // if (id) {
+    //   this.playlist = this.playlistsService.getPlaylist(id);
+  }
 
   ngOnInit(): void {
+    this.activeRoute.params.subscribe(params => {
+      // tslint:disable-next-line: radix
+      const id = parseInt(params.id);
+      if (id) {
+        this.playlist = this.playlistsService.getPlaylist(id);
+      }
+    }
+    );
   }
-
 }
