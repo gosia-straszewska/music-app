@@ -25,7 +25,7 @@ import { AppModule } from '../app.module';
     routerModule
   ],
   exports: [
-    PlaylistsComponent
+    // PlaylistsComponent
   ],
   providers: [
     PlaylistsService,
