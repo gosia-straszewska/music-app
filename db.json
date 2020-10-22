@@ -1,0 +1,32 @@
+{
+  "playlists": [{
+      "id": 1,
+      "name": "RnB",
+      "tracks": [],
+      "color": "#0000FF",
+      "favourite": 0
+    },
+    {
+      "id": 2,
+      "name": "Rock",
+      "tracks": [],
+      "color": "#FF0000",
+      "favourite": 1
+    },
+    {
+      "name": "Test",
+      "tracks": [],
+      "color": "#f2ff00",
+      "favourite": false,
+      "id": 3
+    },
+    {
+      "name": "Test 2",
+      "tracks": [],
+      "color": "#00ff55",
+      "favourite": false,
+      "category": "Inna",
+      "id": 4
+    }
+  ]
+}

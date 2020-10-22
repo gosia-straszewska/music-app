@@ -40,7 +40,7 @@ export class AuthService {
     console.log(this.token);
     return this.token;
   }
-// DO ĆWICZENIA POBIERANIA DANYCH Z API
+  // DO ĆWICZENIA POBIERANIA DANYCH Z API
 
   // getData(): any {
   //   const httpOptions = {
@@ -54,7 +54,7 @@ export class AuthService {
   //   };
 
   //   return this.http.get('https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7FjRGTy?market=ES', httpOptions)
-  //         .subscribe(res => console.log(res));
+  //         ribe(res => console.log(res));
   // }
 
   authorize(): void {

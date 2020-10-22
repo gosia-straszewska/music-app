@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { PlaylistsService, Playlist } from './playlists.service';
 
 @Component({
   selector: 'app-playlists-list',
@@ -19,7 +20,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
         [routerLink]=[playlist.id]>
           <td> {{ i + 1 }} </td>
           <td> {{ playlist.name }} </td>
-          <td> {{ playlist.tracks }} </td>
+          <td> {{ playlist.tracks.length }} </td>
           <td>
             <label><input type="checkbox" [(ngModel)]="playlist.favourite" (click)="$event.stopPropagation()">
             Ulubiona</label>
@@ -35,21 +36,16 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
   `]
 })
 export class PlaylistsListComponent implements OnInit {
-  @Input()
-  playlists;
 
-  @Input()
-  selected;
+  playlists: Playlist[];
 
-  @Output()
-  selectedPlaylist = new EventEmitter<any>();
-
-  select(playlist): void {
-    this.selectedPlaylist.emit(playlist);
-  }
-  constructor() { }
+  constructor( private playlistsService: PlaylistsService) { }
 
   ngOnInit(): void {
+    this.playlistsService.getPlaylistsStrem()
+    .subscribe( (playlists: Playlist[]) => {
+      this.playlists = playlists;
+    });
   }
 
 }

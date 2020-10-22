@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, ChildActivationStart, Router } from '@angular/router';
-import { PlaylistsService } from './playlists.service';
+import { PlaylistsService, Playlist } from './playlists.service';
 
 @Component({
   selector: 'app-playlist-form',
@@ -66,8 +66,11 @@ export class PlaylistFormComponent implements OnInit {
     if (!valid) {
       return;
     }
-    this.playlistsService.savePlaylist(playlist);
-    this.router.navigate(['playlist', playlist.id ]);
+    this.playlistsService.savePlaylist(playlist)
+    // tslint:disable-next-line: no-shadowed-variable
+    .subscribe( playlist => {
+      this.router.navigate(['playlist', playlist.id ]);
+    });
   }
 
   constructor(private activeRoute: ActivatedRoute,
@@ -79,8 +82,11 @@ export class PlaylistFormComponent implements OnInit {
       // tslint:disable-next-line: radix
       const id = parseInt(params.id);
       if (id) {
-        const playlist = this.playlistsService.getPlaylist(id);
-        this.playlist = Object.assign({}, playlist); // <--- KOPIA DO EDYCJI FORMULARZA
+        this.playlistsService.getPlaylist(id)
+        .subscribe( (playlist: Playlist) => {
+          this.playlist = playlist;
+          this.playlist = Object.assign({}, playlist); // <--- KOPIA DO EDYCJI FORMULARZA
+        });
       } else {
         this.playlist = this.playlistsService.createPlaylist();
       }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlaylistsService } from './playlists.service';
+import { PlaylistsService, Playlist } from './playlists.service';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -40,7 +40,11 @@ export class PlaylistDetailComponent implements OnInit {
       // tslint:disable-next-line: radix
       const id = parseInt(params.id);
       if (id) {
-        this.playlist = this.playlistsService.getPlaylist(id);
+        this.playlistsService.getPlaylist(id)
+        .subscribe( (playlist: Playlist) => {
+          this.playlist = playlist;
+        });
+        // this.playlist = Object.assign({}, playlist); // <--- KOPIA DO EDYCJI FORMULARZA
       }
     }
     );
