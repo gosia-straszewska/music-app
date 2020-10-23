@@ -31,6 +31,7 @@ export class AlbumDetailsComponent implements OnInit {
     .subscribe(album => {
       this.album = album;
     });
+    console.log(this.album);
   }
 
 }

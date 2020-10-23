@@ -7,9 +7,8 @@ import { PlaylistFormComponent } from './playlist-form.component';
 import { PlaylistsListComponent } from './playlists-list.component';
 import { FormsModule } from '@angular/forms';
 import { PlaylistsService } from './playlists.service';
-import playlistsData from './playlists.data';
 import { routerModule } from './playlists.routing';
-import { AppModule } from '../app.module';
+import { MusicSharedModule} from '../music-shared/music-shared.module';
 
 @NgModule({
   declarations: [
@@ -22,14 +21,15 @@ import { AppModule } from '../app.module';
   imports: [
     CommonModule,
     FormsModule,
+    MusicSharedModule,
     routerModule
   ],
   exports: [
-    // PlaylistsComponent
+    PlaylistsComponent
   ],
   providers: [
-    PlaylistsService,
-    {provide: 'PlaylistsData', useValue: playlistsData}
+    // PlaylistsService,
+    // {provide: 'PlaylistsData', useValue: playlistsData}
   ]
 })
 export class PlaylistsModule { }
