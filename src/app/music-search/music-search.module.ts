@@ -10,7 +10,7 @@ import { AuthService } from '../auth.service';
 import { AlbumSearchFormComponent } from './album-search-form.component';
 import { routerModule } from './music-search.routing';
 import { AlbumDetailsComponent } from './album-details.component';
-import { TrackListComponent } from './track-list.component';
+import { MusicSharedModule} from '../music-shared/music-shared.module';
 
 
 @NgModule({
@@ -19,8 +19,7 @@ import { TrackListComponent } from './track-list.component';
     AlbumListComponent,
     AlbumCardComponent,
     AlbumSearchFormComponent,
-    AlbumDetailsComponent,
-    TrackListComponent
+    AlbumDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +27,7 @@ import { TrackListComponent } from './track-list.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MusicSharedModule,
     routerModule
   ],
   exports: [

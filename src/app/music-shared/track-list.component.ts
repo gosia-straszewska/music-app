@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PlaylistSelectionService } from './playlist-selection.service';
 
 @Component({
   selector: 'app-track-list',
@@ -13,10 +14,12 @@ import { Component, Input, OnInit } from '@angular/core';
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let track of tracks" (click)="play(audio_id, track)">
+        <tr *ngFor="let track of tracks">
           <td> {{track.track_number}} </td>
           <td> {{track.name}} </td>
           <td> {{track.artists[0].name}} </td>
+          <td (click)="play(audio_id, track)">Graj</td>
+          <td (click)="addToPlaylist(track)">Dodaj</td>
         </tr>
       </tbody>
     </table>
@@ -29,7 +32,7 @@ export class TrackListComponent implements OnInit {
   @Input()
   tracks: object;
 
-  constructor() { }
+  constructor( private selectionService: PlaylistSelectionService) { }
 
   ngOnInit(): void {
   }
@@ -46,6 +49,10 @@ export class TrackListComponent implements OnInit {
     } else {
       audio.pause();
     }
+  }
+
+  addToPlaylist(track): void {
+    this.selectionService.addToPlaylist(track);
   }
 
 }
