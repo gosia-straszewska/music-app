@@ -5,15 +5,17 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-album-details',
   template: `
-    <div class="row mt-1" *ngIf="album">
-      <div class="col-xs">
+  <div class="container">
+    <h4 class="display-3 mb-3 row justify-content-end mt-3">Utwory</h4>
+    <div class="row mt-1 justify-content-center" *ngIf="album">
+      <div class="col-4 mr-5">
         <app-album-card class="card" [album]="album"></app-album-card>
       </div>
-      <div class="col-xs">
-        <h4 class="display-3 mb-2 float-right">Utwory</h4>
+      <div class="col-6">
         <app-track-list [tracks]="this.album['tracks'].items"></app-track-list>
       </div>
     </div>
+  </div>
   `,
   styles: [
   ]

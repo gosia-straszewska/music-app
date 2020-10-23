@@ -4,8 +4,8 @@ import { MusicSearchService } from './music-search.service';
 @Component({
   selector: 'app-album-list',
   template: `
-  <div class="card-deck card-deck-justify">
-    <app-album-card [album]="album" class="card"
+  <div class="card-deck justify-content-md-center">
+    <app-album-card [album]="album" class="card mb-5"
     [routerLink]="['/music', 'album', album.id]"
     *ngFor="let album of albums | async"></app-album-card>
   </div>

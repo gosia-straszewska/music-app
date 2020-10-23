@@ -40,6 +40,18 @@ export class PlaylistsService {
     //  });
   }
 
+  // TODO:
+
+  deleteFromPlaylist(playlistId, track): void {
+    this.playlist = this.playlists.find( playlist => playlist.id.toString() === playlistId);
+    this.playlist.tracks = this.playlist.tracks.filter(trackItem => trackItem !== track);
+    // this.playlist.tracks.push(track);
+    this.savePlaylist(this.playlist);
+    //  .subscribe( () => {
+    //   // ...
+    //  });
+  }
+
   savePlaylist(playlist): any {
     if (playlist.id){
       this.request = this.http.put(this.serverUrl + playlist.id, playlist);

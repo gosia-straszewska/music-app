@@ -4,7 +4,16 @@ import { PlaylistSelectionService } from './playlist-selection.service';
 @Component({
   selector: 'app-track-list',
   template: `
-  <audio #audio_id controls style="width:100%"></audio>
+  <audio #audio_id controls style="width:100%" class="mb-4"></audio>
+  <nav *ngIf="!playlistName" class="navbar navbar-light bg-faded navbar-fixed-bottom">
+    <div class="container">
+      <div class="row" style="width:100%">
+        <div class="col-xs-6" style="width:100%">
+          <app-playlist-selector> </app-playlist-selector>
+        </div>
+      </div>
+    </div>
+  </nav>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -18,19 +27,23 @@ import { PlaylistSelectionService } from './playlist-selection.service';
           <td> {{track.track_number}} </td>
           <td> {{track.name}} </td>
           <td> {{track.artists[0].name}} </td>
-          <td (click)="play(audio_id, track)">Graj</td>
-          <td (click)="addToPlaylist(track)">Dodaj</td>
+          <td (click)="play(audio_id, track)">&#9654;</td>
+          <td *ngIf="!playlistName"(click)="addToPlaylist(track)" style="color: green">&#10010;</td>
+          <td *ngIf="playlistName" (click)="deleteFromPlaylist(track)" style="color: red">&#9644;</td>
         </tr>
       </tbody>
     </table>
   `,
-  styles: [
-  ]
+  styles: [`
+  `]
 })
 export class TrackListComponent implements OnInit {
 
   @Input()
   tracks: object;
+
+  @Input()
+  playlistName: string;
 
   constructor( private selectionService: PlaylistSelectionService) { }
 
@@ -54,5 +67,11 @@ export class TrackListComponent implements OnInit {
   addToPlaylist(track): void {
     this.selectionService.addToPlaylist(track);
   }
+
+  deleteFromPlaylist(track): void {
+    this.selectionService.deleteFromPlaylist(track)
+  }
+
+
 
 }

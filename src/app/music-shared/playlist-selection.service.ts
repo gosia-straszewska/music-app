@@ -33,4 +33,8 @@ export class PlaylistSelectionService {
   addToPlaylist(track): void {
     this.playlistsService.addToPlaylist(this.selectedId, track);
   }
+
+  deleteFromPlaylist(track): void {
+    this.playlistsService.deleteFromPlaylist(this.selectedId, track);
+  }
 }

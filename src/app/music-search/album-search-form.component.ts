@@ -7,7 +7,7 @@ import { filter, distinctUntilChanged, debounceTime } from 'rxjs/operators';
   selector: 'app-album-search-form',
   template: `
   <form [formGroup]="searchForm">
-    <div class="input-group mb-3">
+    <div class="input-group mb-5">
       <input type="text" formControlName="query" class="form-control" placeholder="Słowa kluczowe">
     </div>
   </form>
