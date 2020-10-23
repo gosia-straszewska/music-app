@@ -10,6 +10,7 @@ import { PlaylistsService, Playlist } from './playlists.service';
   </div>
   <div *ngIf="playlist">
     <h3 class="card-title">{{playlist.name}}</h3>
+    <app-track-list [tracks]="playlist.tracks"></app-track-list>
     <div class="form-group">
       <button class="btn btn-success float-xs-right" (click)="edit(playlist)">Edytuj</button>
     </div>

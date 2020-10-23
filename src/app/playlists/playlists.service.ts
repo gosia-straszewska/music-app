@@ -5,10 +5,12 @@ import { Observable, Subject } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 
 export interface Playlist {
+      id?: number;
       name: string;
       tracks: any[];
       color: string;
       favourite: boolean;
+      category?: string;
 }
 
 @Injectable({
@@ -30,13 +32,12 @@ export class PlaylistsService {
   playlistsStream$ = new Subject<Playlist[]>();
 
   addToPlaylist(playlistId, track): void {
-     this.playlist = this.playlists.find( playlist => playlist.id === playlistId);
-     console.log(this.playlist);
-     this.playlist.tracks.push(track);
-     this.savePlaylist(this.playlist)
-     .subscribe( () => {
-      // ...
-     });
+    this.playlist = this.playlists.find( playlist => playlist.id.toString() === playlistId);
+    this.playlist.tracks.push(track);
+    this.savePlaylist(this.playlist);
+    //  .subscribe( () => {
+    //   // ...
+    //  });
   }
 
   savePlaylist(playlist): any {
@@ -74,7 +75,6 @@ export class PlaylistsService {
     )
     .subscribe( playlists => {
       this.playlists = playlists;
-      console.log(this.playlists);
       this.playlistsStream$.next(this.playlists);
     });
   }

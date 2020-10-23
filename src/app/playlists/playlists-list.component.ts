@@ -15,7 +15,6 @@ import { PlaylistsService, Playlist } from './playlists.service';
       </thead>
       <tbody>
         <tr *ngFor="let playlist of playlists, let i = index" class="playlist-row"
-        [ngClass]="{'table-active': selected == playlist}"
         [ngStyle]="{ borderBottomColor:playlist.color }"
         [routerLink]=[playlist.id]>
           <td> {{ i + 1 }} </td>

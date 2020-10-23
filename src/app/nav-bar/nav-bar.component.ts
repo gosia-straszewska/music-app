@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-nav-bar',
   template: `
-   <nav class="navbar navbar-light bg-faded">
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
         <h3>
           <a routerLink="/" class="navbar-brand">MusicApp</a>
         </h3>
-        <ul class="nav navbar-nav float-right">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" routerLink="/music" routerLinkActive="active"> Szukaj Muzyki </a>
           </li>

@@ -7,7 +7,7 @@ import { PlaylistsService} from '../playlists/playlists.service';
   template: `
   <div class="input-group">
     <label class="col-xs-4 col-form-label">Aktywna Playlista: </label>
-    <select class="form-control" [ngModel]="selectedId" (ngModelChange)="setSelected('playlist.id')">
+    <select class="form-control" [ngModel]="selectedId" (ngModelChange)="setSelected($event)">
       <option *ngFor="let playlist of playlists" [value]="playlist.id">{{playlist.name}} ({{playlist.tracks.length}})</option>
     </select>
   </div>
