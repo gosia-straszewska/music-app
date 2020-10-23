@@ -11,9 +11,9 @@ import { MusicSearchService } from './music-search.service';
   </div>
   `,
   styles: [`
-    /* .card-deck-justify {
-      justify-content: space-between;
-    } */
+    .card {
+      cursor: pointer;
+    }
   `]
 })
 export class AlbumListComponent implements OnInit {

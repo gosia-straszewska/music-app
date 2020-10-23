@@ -31,6 +31,7 @@ import { PlaylistsService, Playlist } from './playlists.service';
   styles: [`
     .playlist-row {
       border-bottom: 3px solid transparent;
+      cursor: pointer
     }
   `]
 })

@@ -12,7 +12,11 @@ import { PlaylistsService} from '../playlists/playlists.service';
     </select>
   </div>
   `,
-  styles: []
+  styles: [`
+  .form-control {
+    cursor: pointer
+  }
+  `]
 })
 export class PlaylistSelectorComponent implements OnInit {
 

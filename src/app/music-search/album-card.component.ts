@@ -10,14 +10,13 @@ import { Component, OnInit, Input } from '@angular/core';
     </div>
   `,
   styles: [`
-  :host(){
+    :host(){
       flex: 0 0 25% !important;
       margin-bottom: 0.625rem  !important;
-      overflow:hidden;
     }
 
-    :host():hover .card-body{
-      top: 100%;
+    .card-img-top {
+      position: relative;
     }
 
     .card-body{
@@ -26,6 +25,12 @@ import { Component, OnInit, Input } from '@angular/core';
       color: #fff;
       font-size: 1em !important;
       transition: .2s top ease-out;
+      position: absolute;
+      width: 100%;
+      display: none;
+    }
+    .card-img-top:hover~.card-body {
+        display: block;
     }
 `]
 })
