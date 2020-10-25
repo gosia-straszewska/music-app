@@ -12,6 +12,7 @@ import { MusicSearchService } from './music-search.service';
   `,
   styles: [`
     .card {
+      border: none;
       cursor: pointer;
     }
   `]

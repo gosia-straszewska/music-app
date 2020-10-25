@@ -27,7 +27,8 @@ import { PlaylistSelectionService } from './playlist-selection.service';
           <td> {{track.track_number}} </td>
           <td> {{track.name}} </td>
           <td> {{track.artists[0].name}} </td>
-          <td (click)="play(audio_id, track)" class="play">&#9654;</td>
+          <td *ngIf="audio_id.paused"(click)="play(audio_id, track)" class="play">&#9654;</td>
+          <td *ngIf="!audio_id.paused"(click)="play(audio_id, track)" class="stop">&#10074;&#10074;</td>
           <td *ngIf="!playlistName"(click)="addToPlaylist(track)" class="add" style="color: green">&#10010;</td>
           <td *ngIf="playlistName" (click)="deleteFromPlaylist(track)" class="stop" style="color: red">&#9644;</td>
         </tr>
