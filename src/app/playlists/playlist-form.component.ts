@@ -43,9 +43,11 @@ import { PlaylistsService, Playlist } from './playlists.service';
           <label><input type="checkbox" [(ngModel)]="playlist.favourite" name="favourite">
           Ulubiona</label>
         </div>
-        <div class="form-group">
-          <button class="btn btn-success float-xs-right"
+        <div class="form-group row justify-content-between">
+          <button class="btn btn-success float-xs-right ml-3"
           type="submit">Zapisz</button>
+          <button class="btn btn-danger float-xs-right mr-3"
+          (click)="deletePlaylist(playlist)">Usuń</button>
         </div>
         </form>
       </div>
@@ -61,17 +63,7 @@ export class PlaylistFormComponent implements OnInit {
 
   playlist;
   categories: string[] = ['Filmowa', 'Rock', 'Inna'];
-
-  save(valid, playlist): void {
-    if (!valid) {
-      return;
-    }
-    this.playlistsService.savePlaylist(playlist)
-    // tslint:disable-next-line: no-shadowed-variable
-    .subscribe( playlist => {
-      this.router.navigate(['playlist', playlist.id ]);
-    });
-  }
+  deleted = false;
 
   constructor(private activeRoute: ActivatedRoute,
               private playlistsService: PlaylistsService,
@@ -92,6 +84,24 @@ export class PlaylistFormComponent implements OnInit {
       }
     }
     );
+  }
+
+  save(valid, playlist): void {
+    const playlistId = playlist.id;
+    if (!valid) {
+      return;
+    } else if (valid && this.deleted === false) {
+      this.playlistsService.savePlaylist(playlist)
+      // tslint:disable-next-line: no-shadowed-variable
+      .subscribe( playlist => {
+        playlistId ? this.router.navigate(['playlist/' + playlistId]) : this.router.navigate(['playlist']);
+      });
+    }
+  }
+
+  deletePlaylist(playlist): any {
+    this.deleted = true;
+    this.playlistsService.deletePlaylist(playlist);
   }
 
 }

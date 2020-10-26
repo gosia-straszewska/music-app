@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 export interface Playlist {
   id?: number;
@@ -19,7 +20,9 @@ export interface Playlist {
 export class PlaylistsService {
 
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient,
+              private auth: AuthService,
+              private router: Router) {
     this.httpOptions = this.auth.httpOptions;
   }
 
@@ -47,6 +50,23 @@ export class PlaylistsService {
   }
 
   // TODO:
+
+  deletePlaylist(playlist): any {
+    const playlistToDelete = playlist.id;
+
+    return this.http.delete(this.serverUrl + playlistToDelete)
+    .pipe(
+      map( response => response),
+      // tslint:disable-next-line: no-shadowed-variable
+      tap( playlist => {
+        this.getPlaylists();
+      })
+    )
+    // tslint:disable-next-line: no-shadowed-variable
+    .subscribe( playlist => {
+      this.router.navigate(['playlist']);
+    });
+  }
 
   deleteTrack(playlistId, track): void {
     this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
@@ -87,11 +107,11 @@ export class PlaylistsService {
       tap( playlist => {
         this.getPlaylists();
       })
-    )
+    );
       // tslint:disable-next-line: no-shadowed-variable
-      .subscribe( playlist => {
-        this.getPlaylists();
-      });
+      // .subscribe( playlist => {
+      //   this.getPlaylists();
+      // });
   }
 
   createPlaylist(): Playlist {

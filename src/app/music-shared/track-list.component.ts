@@ -60,7 +60,6 @@ export class TrackListComponent implements OnInit {
   constructor( private selectionService: PlaylistSelectionService) { }
 
   ngOnInit(): void {
-    console.log(this.playlist);
   }
 
   play(audio, track): void {
