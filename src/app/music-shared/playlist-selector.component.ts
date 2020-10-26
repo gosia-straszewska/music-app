@@ -14,7 +14,7 @@ import { PlaylistsService} from '../playlists/playlists.service';
   `,
   styles: [`
   .form-control {
-    cursor: pointer
+    cursor: pointer;
   }
   `]
 })

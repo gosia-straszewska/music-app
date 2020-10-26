@@ -5,12 +5,12 @@ import { Observable, Subject } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 
 export interface Playlist {
-      id?: number;
-      name: string;
-      tracks: any[];
-      color: string;
-      favourite: boolean;
-      category?: string;
+  id?: number;
+  name: string;
+  tracks: any;
+  color: string;
+  favourite: boolean;
+  category?: string;
 }
 
 @Injectable({
@@ -19,7 +19,7 @@ export interface Playlist {
 export class PlaylistsService {
 
 
-  constructor( private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient, private auth: AuthService) {
     this.httpOptions = this.auth.httpOptions;
   }
 
@@ -28,12 +28,18 @@ export class PlaylistsService {
   httpOptions;
   request: any;
   playlist: Playlist;
+  trackIndexToDelete;
 
   playlistsStream$ = new Subject<Playlist[]>();
 
   addToPlaylist(playlistId, track): void {
-    this.playlist = this.playlists.find( playlist => playlist.id.toString() === playlistId);
-    this.playlist.tracks.push(track);
+    this.playlist = this.playlists.find(playlist => playlist.id.toString() === playlistId);
+    const duplicate = this.playlist.tracks.some(el => el.id === track.id);
+    if (!duplicate) {
+      this.playlist.tracks.push(track);
+    } else {
+      return alert(`Ten utwór istnieje na playliście ${this.playlist.name}`);
+    }
     this.savePlaylist(this.playlist);
     //  .subscribe( () => {
     //   // ...
@@ -42,18 +48,35 @@ export class PlaylistsService {
 
   // TODO:
 
-  deleteFromPlaylist(playlistId, track): void {
-    this.playlist = this.playlists.find( playlist => playlist.id.toString() === playlistId);
-    this.playlist.tracks = this.playlist.tracks.filter(trackItem => trackItem !== track);
+  deleteTrack(playlistId, track): void {
+    this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
+    this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === track.id);
+    console.log(this.trackIndexToDelete, 'del', track, playlistId);
+    this.playlist = this.playlist.tracks.splice(this.trackIndexToDelete, 1);
     // this.playlist.tracks.push(track);
-    this.savePlaylist(this.playlist);
+    this.deleteFromPlaylist(playlistId);
     //  .subscribe( () => {
     //   // ...
     //  });
   }
 
+  deleteFromPlaylist(playlistId): any {
+    return this.http.delete(this.serverUrl + playlistId)
+      .pipe(
+        map(response => response)
+      )
+      // tslint:disable-next-line: no-shadowed-variable
+      .subscribe(playlist => {
+        this.updatePlaylist(playlistId);
+      });
+  }
+
+  updatePlaylist(playlistId): any {
+    return this.http.post(this.serverUrl + playlistId, this.playlist);
+  }
+
   savePlaylist(playlist): any {
-    if (playlist.id){
+    if (playlist.id) {
       this.request = this.http.put(this.serverUrl + playlist.id, playlist);
     } else {
       this.request = this.http.post(this.serverUrl, playlist);
@@ -65,10 +88,10 @@ export class PlaylistsService {
         this.getPlaylists();
       })
     )
-    // tslint:disable-next-line: no-shadowed-variable
-    .subscribe( playlist => {
-      this.getPlaylists();
-    });
+      // tslint:disable-next-line: no-shadowed-variable
+      .subscribe( playlist => {
+        this.getPlaylists();
+      });
   }
 
   createPlaylist(): Playlist {
@@ -82,26 +105,26 @@ export class PlaylistsService {
 
   getPlaylists(): any {
     return this.http.get(this.serverUrl)
-    .pipe(
-      map((response) => response)
-    )
-    .subscribe( playlists => {
-      this.playlists = playlists;
-      this.playlistsStream$.next(this.playlists);
-    });
+      .pipe(
+        map((response) => response)
+      )
+      .subscribe( playlists => {
+        this.playlists = playlists;
+        this.playlistsStream$.next(this.playlists);
+      });
   }
 
   getPlaylistsStrem(): Observable<any> {
     if (!this.playlists) {
-        this.getPlaylists();
+      this.getPlaylists();
     }
     return this.playlistsStream$.pipe(startWith(this.playlists));
   }
 
   getPlaylist(id): Observable<any> {
     return this.http.get(this.serverUrl + id)
-    .pipe(
-      map( response => response)
-    );
+      .pipe(
+        map( response => response)
+      );
   }
 }

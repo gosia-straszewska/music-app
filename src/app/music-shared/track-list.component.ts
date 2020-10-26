@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Playlist } from '../playlists/playlists.service';
 import { PlaylistSelectionService } from './playlist-selection.service';
 
 @Component({
   selector: 'app-track-list',
   template: `
   <audio #audio_id controls style="width:100%" class="mb-4"></audio>
-  <nav *ngIf="!playlistName" class="navbar navbar-light bg-faded navbar-fixed-bottom">
+  <nav *ngIf="!playlist" class="navbar navbar-light bg-faded navbar-fixed-bottom">
     <div class="container">
       <div class="row" style="width:100%">
         <div class="col-xs-6" style="width:100%">
@@ -29,8 +30,8 @@ import { PlaylistSelectionService } from './playlist-selection.service';
           <td> {{track.artists[0].name}} </td>
           <td *ngIf="audio_id.paused"(click)="play(audio_id, track)" class="play">&#9654;</td>
           <td *ngIf="!audio_id.paused"(click)="play(audio_id, track)" class="stop">&#10074;&#10074;</td>
-          <td *ngIf="!playlistName"(click)="addToPlaylist(track)" class="add" style="color: green">&#10010;</td>
-          <td *ngIf="playlistName" (click)="deleteFromPlaylist(track)" class="stop" style="color: red">&#9644;</td>
+          <td *ngIf="!playlist"(click)="addToPlaylist(track)" class="add" style="color: green">&#10010;</td>
+          <td *ngIf="playlist" (click)="deleteTrack(playlist, track)" class="stop" style="color: red">&#9644;</td>
         </tr>
       </tbody>
     </table>
@@ -50,11 +51,16 @@ export class TrackListComponent implements OnInit {
   tracks: object;
 
   @Input()
-  playlistName: string;
+  playlist: Playlist;
+
+  playlistId: number;
+
+  equalTrack: boolean;
 
   constructor( private selectionService: PlaylistSelectionService) { }
 
   ngOnInit(): void {
+    console.log(this.playlist);
   }
 
   play(audio, track): void {
@@ -71,12 +77,21 @@ export class TrackListComponent implements OnInit {
     }
   }
 
-  addToPlaylist(track): void {
-    this.selectionService.addToPlaylist(track);
+  checkTrack(track, playlist): any {
+    console.log(track, 'track');
+    console.log(playlist, 'playlist');
   }
 
-  deleteFromPlaylist(track): void {
-    this.selectionService.deleteFromPlaylist(track)
+  addToPlaylist(track): void {
+    this.selectionService.addToPlaylist(track);
+    // console.log(track, 'track');
+    // console.log(playlist, 'playlist');
+
+  }
+
+  deleteTrack(playlist, track): void {
+    this.playlistId = this.playlist.id;
+    this.selectionService.deleteTrack(this.playlistId, track);
   }
 
 

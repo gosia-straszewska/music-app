@@ -8,7 +8,7 @@ import { startWith } from 'rxjs/operators';
 })
 export class PlaylistSelectionService {
 
-  selectedId: number;
+  selectedId: [];
 
   selectedIdStrem = new Subject();
 
@@ -31,10 +31,14 @@ export class PlaylistSelectionService {
   }
 
   addToPlaylist(track): void {
-    this.playlistsService.addToPlaylist(this.selectedId, track);
+    if (this.selectedId.length > 1) {
+      return alert('Wybierz playlistę!');
+    } else {
+      this.playlistsService.addToPlaylist(this.selectedId, track);
+    }
   }
 
-  deleteFromPlaylist(track): void {
-    this.playlistsService.deleteFromPlaylist(this.selectedId, track);
+  deleteTrack(playlistId, track): void {
+    this.playlistsService.deleteTrack(playlistId, track);
   }
 }
