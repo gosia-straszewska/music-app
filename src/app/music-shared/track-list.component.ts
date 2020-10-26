@@ -54,7 +54,6 @@ export class TrackListComponent implements OnInit {
   playlist: Playlist;
 
   playlistId: number;
-
   equalTrack: boolean;
 
   constructor( private selectionService: PlaylistSelectionService) { }

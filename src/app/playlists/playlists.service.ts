@@ -43,13 +43,12 @@ export class PlaylistsService {
     } else {
       return alert(`Ten utwór istnieje na playliście ${this.playlist.name}`);
     }
-    this.savePlaylist(this.playlist);
+    this.savePlaylist(this.playlist)
+    .subscribe( playlist => playlist);
     //  .subscribe( () => {
     //   // ...
     //  });
   }
-
-  // TODO:
 
   deletePlaylist(playlist): any {
     const playlistToDelete = playlist.id;
@@ -67,6 +66,8 @@ export class PlaylistsService {
       this.router.navigate(['playlist']);
     });
   }
+  
+  // TODO:
 
   deleteTrack(playlistId, track): void {
     this.playlist = this.playlists.find(playlist => playlist.id === playlistId);

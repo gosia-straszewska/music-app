@@ -17,8 +17,11 @@ import { ActivatedRoute } from '@angular/router';
     </div>
   </div>
   `,
-  styles: [
-  ]
+  styles: [`
+  .card {
+    border: none !important;
+  }
+  `]
 })
 export class AlbumDetailsComponent implements OnInit {
 

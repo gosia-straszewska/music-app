@@ -21,6 +21,7 @@ import { Component, OnInit, Input } from '@angular/core';
       padding: 0;
       margin-bottom: 1.5rem;
       position: relative;
+      border: none !important;
     }
 
     .card {
