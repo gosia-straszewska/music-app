@@ -37,8 +37,8 @@ export class PlaylistSelectionService {
       this.playlistsService.addToPlaylist(this.selectedId, track);
     }
   }
-
-  deleteTrack(playlistId, track): void {
-    this.playlistsService.deleteTrack(playlistId, track);
+//  FIXME:
+  deleteTrack(playlistId, trackId): void {
+    this.playlistsService.deleteTrack(playlistId, trackId);
   }
 }

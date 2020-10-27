@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 export interface Playlist {
   id?: number;
   name: string;
-  tracks: any;
+  tracks: any[];
   color: string;
   favourite: boolean;
   category?: string;
@@ -27,15 +27,23 @@ export class PlaylistsService {
   }
 
   playlists;
-  serverUrl = 'http://localhost:3000/playlists/';
+  tracks;
+  playlistServerUrl = 'http://localhost:3000/playlists/';
+  tracksServerUrl = 'http://localhost:3000/tracks/';
   httpOptions;
   request: any;
   playlist: Playlist;
   trackIndexToDelete;
+  trackToAdd: any;
 
   playlistsStream$ = new Subject<Playlist[]>();
 
-  addToPlaylist(playlistId, track): void {
+  // OK
+
+  addToPlaylist(playlistId, track): any {
+    this.trackToAdd = track;
+    this.trackToAdd.playlistId = playlistId;
+
     this.playlist = this.playlists.find(playlist => playlist.id.toString() === playlistId);
     const duplicate = this.playlist.tracks.some(el => el.id === track.id);
     if (!duplicate) {
@@ -45,15 +53,17 @@ export class PlaylistsService {
     }
     this.savePlaylist(this.playlist)
     .subscribe( playlist => playlist);
-    //  .subscribe( () => {
-    //   // ...
-    //  });
+
+    return this.http.post(this.tracksServerUrl, this.trackToAdd)
+    .pipe(
+      map( response => response)
+    ).subscribe ();
   }
 
   deletePlaylist(playlist): any {
     const playlistToDelete = playlist.id;
 
-    return this.http.delete(this.serverUrl + playlistToDelete)
+    return this.http.delete(this.playlistServerUrl + playlistToDelete)
     .pipe(
       map( response => response),
       // tslint:disable-next-line: no-shadowed-variable
@@ -66,41 +76,32 @@ export class PlaylistsService {
       this.router.navigate(['playlist']);
     });
   }
-  
+
   // TODO:
 
-  deleteTrack(playlistId, track): void {
+  deleteTrack(playlistId, trackId): any {
     this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
-    this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === track.id);
-    console.log(this.trackIndexToDelete, 'del', track, playlistId);
-    this.playlist = this.playlist.tracks.splice(this.trackIndexToDelete, 1);
+    this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === trackId);
+    // console.log(this.playlist.tracks.length, 'length 1');
+    // // console.log(this.trackIndexToDelete, 'del', track, playlistId);
+    // this.playlist = this.playlist.tracks.splice(this.trackIndexToDelete, 1);
+    // console.log(this.playlist.tracks.length, 'length 2');
     // this.playlist.tracks.push(track);
-    this.deleteFromPlaylist(playlistId);
-    //  .subscribe( () => {
-    //   // ...
-    //  });
-  }
-
-  deleteFromPlaylist(playlistId): any {
-    return this.http.delete(this.serverUrl + playlistId)
-      .pipe(
-        map(response => response)
-      )
-      // tslint:disable-next-line: no-shadowed-variable
-      .subscribe(playlist => {
-        this.updatePlaylist(playlistId);
-      });
-  }
-
-  updatePlaylist(playlistId): any {
-    return this.http.post(this.serverUrl + playlistId, this.playlist);
+    // this.trackToDelete(trackId);
+    return this.http.delete(this.playlistServerUrl + playlistId + '/tracks/' + this.trackIndexToDelete, this.options)
+    // .pipe(
+    //   map(response => response)
+    // )
+    // tslint:disable-next-line: no-shadowed-variable
+    .subscribe(playlist => playlist
+    );
   }
 
   savePlaylist(playlist): any {
     if (playlist.id) {
-      this.request = this.http.put(this.serverUrl + playlist.id, playlist);
+      this.request = this.http.put(this.playlistServerUrl + playlist.id, playlist);
     } else {
-      this.request = this.http.post(this.serverUrl, playlist);
+      this.request = this.http.post(this.playlistServerUrl, playlist);
     }
     return this.request.pipe(
       map( response => response),
@@ -125,7 +126,7 @@ export class PlaylistsService {
   }
 
   getPlaylists(): any {
-    return this.http.get(this.serverUrl)
+    return this.http.get(this.playlistServerUrl)
       .pipe(
         map((response) => response)
       )
@@ -133,6 +134,13 @@ export class PlaylistsService {
         this.playlists = playlists;
         this.playlistsStream$.next(this.playlists);
       });
+  }
+
+  getTracksToPlaylist(id): any {
+    return this.http.get(this.playlistServerUrl + `${id}/tracks`)
+    .pipe(
+      map( response => response)
+    );
   }
 
   getPlaylistsStrem(): Observable<any> {
@@ -143,7 +151,7 @@ export class PlaylistsService {
   }
 
   getPlaylist(id): Observable<any> {
-    return this.http.get(this.serverUrl + id)
+    return this.http.get(this.playlistServerUrl + id)
       .pipe(
         map( response => response)
       );

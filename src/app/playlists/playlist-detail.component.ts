@@ -10,7 +10,7 @@ import { PlaylistsService, Playlist } from './playlists.service';
   </div>
   <div *ngIf="playlist">
     <h3 class="card-title">{{playlist.name}}</h3>
-    <app-track-list [playlist]="playlist" [tracks]="playlist.tracks"></app-track-list>
+    <app-track-list [playlist]="playlist" [tracks]="tracks"></app-track-list>
     <div class="form-group">
       <button class="btn btn-success float-xs-right" (click)="edit(playlist)">Edytuj</button>
     </div>
@@ -22,6 +22,7 @@ import { PlaylistsService, Playlist } from './playlists.service';
 export class PlaylistDetailComponent implements OnInit {
 
   playlist;
+  tracks: any[];
 
   edit(playlist): void {
     this.router.navigate(['playlist', playlist.id, 'edit']);
@@ -30,10 +31,6 @@ export class PlaylistDetailComponent implements OnInit {
   constructor(private activeRoute: ActivatedRoute,
               private playlistsService: PlaylistsService,
               private router: Router ) {
-    // tslint:disable-next-line: radix
-    // const id = parseInt(this.activeRoute.snapshot.params.id);
-    // if (id) {
-    //   this.playlist = this.playlistsService.getPlaylist(id);
   }
 
   ngOnInit(): void {
@@ -45,6 +42,11 @@ export class PlaylistDetailComponent implements OnInit {
         .subscribe( (playlist: Playlist) => {
           this.playlist = playlist;
         });
+
+        this.playlistsService.getTracksToPlaylist(id)
+        .subscribe( tracks => {
+            this.tracks = tracks;
+          });
         // this.playlist = Object.assign({}, playlist); // <--- KOPIA DO EDYCJI FORMULARZA
       }
     }

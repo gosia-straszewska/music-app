@@ -10,7 +10,7 @@ import { PlaylistSelectionService } from './playlist-selection.service';
     <div class="container">
       <div class="row" style="width:100%">
         <div class="col-xs-6" style="width:100%">
-          <app-playlist-selector> </app-playlist-selector>
+          <app-playlist-selector></app-playlist-selector>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@ import { PlaylistSelectionService } from './playlist-selection.service';
           <td *ngIf="audio_id.paused"(click)="play(audio_id, track)" class="play">&#9654;</td>
           <td *ngIf="!audio_id.paused"(click)="play(audio_id, track)" class="stop">&#10074;&#10074;</td>
           <td *ngIf="!playlist"(click)="addToPlaylist(track)" class="add" style="color: green">&#10010;</td>
-          <td *ngIf="playlist" (click)="deleteTrack(playlist, track)" class="stop" style="color: red">&#9644;</td>
+          <td *ngIf="playlist" (click)="deleteTrack(playlist.id, track.id)" class="stop" style="color: red">&#9644;</td>
         </tr>
       </tbody>
     </table>
@@ -82,14 +82,11 @@ export class TrackListComponent implements OnInit {
 
   addToPlaylist(track): void {
     this.selectionService.addToPlaylist(track);
-    // console.log(track, 'track');
-    // console.log(playlist, 'playlist');
 
   }
-
-  deleteTrack(playlist, track): void {
-    this.playlistId = this.playlist.id;
-    this.selectionService.deleteTrack(this.playlistId, track);
+//  TOFIX:
+  deleteTrack(playlistId, trackId): void {
+    this.selectionService.deleteTrack(playlistId, trackId);
   }
 
 
