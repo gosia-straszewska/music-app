@@ -1,14 +1,5 @@
 {
   "playlists": [
-    {
-      "name": "test 2",
-      "tracks": [
-      ],
-      "color": "#fbff00",
-      "favourite": false,
-      "id": 4
-    }
   ],
-  "tracks": [
-  ]
+  "tracks": []
 }

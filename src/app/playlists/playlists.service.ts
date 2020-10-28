@@ -12,6 +12,7 @@ export interface Playlist {
   color: string;
   favourite: boolean;
   category?: string;
+  playlistLength: number;
 }
 
 @Injectable({
@@ -38,7 +39,7 @@ export class PlaylistsService {
 
   playlistsStream$ = new Subject<Playlist[]>();
 
-  // FIXME:
+  // FIXME: don't add tracks to playlist/tracks on JSON server
 
   addToPlaylist(playlistId, track): any {
     this.trackToAdd = track;
@@ -49,6 +50,7 @@ export class PlaylistsService {
     const duplicate = this.playlist.tracks.some(el => el.id === track.id);
     if (!duplicate) {
       this.playlist.tracks.push(track);
+      this.playlist.playlistLength += 1;
     } else {
       return alert(`Ten utwór istnieje na playliście ${this.playlist.name}`);
     }
@@ -78,9 +80,14 @@ export class PlaylistsService {
     });
   }
 
-  // TODO:
+  // TODO: clear commented code
 
   deleteTrack(trackId, playlistId ): any {
+    this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
+    this.playlist.playlistLength -= 1;
+
+    this.savePlaylist(this.playlist)
+    .subscribe( playlist => playlist);
     // this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
     // this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === trackId);
     // this.playlist = this.playlist.tracks.splice(this.trackIndexToDelete, 1);
@@ -91,9 +98,8 @@ export class PlaylistsService {
       this.http.patch(this.playlistServerUrl + playlistId, playlist);
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this.router.navigate(['playlist/' + playlistId]);
-    });
-    }
-
+        });
+      }
     );
   }
 
@@ -122,6 +128,7 @@ export class PlaylistsService {
       tracks: [],
       color: '#0000FF',
       favourite: false,
+      playlistLength: 0
     };
   }
 
@@ -136,8 +143,8 @@ export class PlaylistsService {
       });
   }
 
-  getTracksToPlaylist(id): any {
-    return this.http.get(this.playlistServerUrl + `${id}/tracks`)
+  getTracksToPlaylist(playlistId): any {
+    return this.http.get(this.playlistServerUrl + `${playlistId}/tracks`)
     .pipe(
       map( response => response)
     );

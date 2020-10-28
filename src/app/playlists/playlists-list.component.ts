@@ -19,7 +19,7 @@ import { PlaylistsService, Playlist } from './playlists.service';
         [routerLink]=[playlist.id]>
           <td> {{ i + 1 }} </td>
           <td> {{ playlist.name }} </td>
-          <td> {{ playlist.tracks.length }} </td>
+          <td value="getTasksNumber(playlist.id)">{{playlist.playlistLength}}</td>
           <td>
             <label><input type="checkbox" [(ngModel)]="playlist.favourite" (click)="$event.stopPropagation()">
             Ulubiona</label>
