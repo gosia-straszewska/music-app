@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -36,8 +36,11 @@ export class PlaylistsService {
   playlist: Playlist;
   trackIndexToDelete;
   trackToAdd: any;
+  playlistTracks: any[];
+
 
   playlistsStream$ = new Subject<Playlist[]>();
+  tracksStream$ = new Subject();
 
   // FIXME: don't add tracks to playlist/tracks on JSON server
 
@@ -46,21 +49,34 @@ export class PlaylistsService {
     this.trackToAdd.playlistId = playlistId;
     this.trackToAdd.id = track.id + 'PLAYLIST' + playlistId;
 
+    this.getTracksToPlaylist(playlistId)
+    .subscribe( tracks => {
+      this.playlistTracks = tracks;
+      this.tracksStream$.next(this.playlistTracks);
+      // console.log(this.playlistTracks);
+    }
+  );
+
     this.playlist = this.playlists.find(playlist => playlist.id.toString() === playlistId);
-    const duplicate = this.playlist.tracks.some(el => el.id === track.id);
+    // console.log(this.playlist);
+    // console.log(playlistTracks);
+    const duplicate = this.playlistTracks.some(el => el.preview_url === this.trackToAdd.preview_url);
+
     if (!duplicate) {
-      this.playlist.tracks.push(track);
       this.playlist.playlistLength += 1;
+
+      this.savePlaylist(this.playlist)
+      .subscribe( playlist => playlist);
+
+      return this.http.post(this.tracksServerUrl, this.trackToAdd)
+      .pipe(
+      map( response => response)
+      )
+      .subscribe ();
+
     } else {
       return alert(`Ten utwór istnieje na playliście ${this.playlist.name}`);
     }
-    this.savePlaylist(this.playlist)
-    .subscribe( playlist => playlist);
-
-    return this.http.post(this.tracksServerUrl, this.trackToAdd)
-    .pipe(
-      map( response => response)
-    ).subscribe ();
   }
 
   deletePlaylist(playlist): any {
@@ -155,6 +171,10 @@ export class PlaylistsService {
       this.getPlaylists();
     }
     return this.playlistsStream$.pipe(startWith(this.playlists));
+  }
+
+  getTracksStream(): Observable<any> {
+    return this.tracksStream$.pipe(startWith(this.playlistTracks));
   }
 
   getPlaylist(id): Observable<any> {
