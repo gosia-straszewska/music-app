@@ -38,11 +38,12 @@ export class PlaylistsService {
 
   playlistsStream$ = new Subject<Playlist[]>();
 
-  // OK
+  // FIXME:
 
   addToPlaylist(playlistId, track): any {
     this.trackToAdd = track;
     this.trackToAdd.playlistId = playlistId;
+    this.trackToAdd.id = track.id + 'PLAYLIST' + playlistId;
 
     this.playlist = this.playlists.find(playlist => playlist.id.toString() === playlistId);
     const duplicate = this.playlist.tracks.some(el => el.id === track.id);
@@ -79,21 +80,20 @@ export class PlaylistsService {
 
   // TODO:
 
-  deleteTrack(playlistId, trackId): any {
-    this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
-    this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === trackId);
-    // console.log(this.playlist.tracks.length, 'length 1');
-    // // console.log(this.trackIndexToDelete, 'del', track, playlistId);
+  deleteTrack(trackId, playlistId ): any {
+    // this.playlist = this.playlists.find(playlist => playlist.id === playlistId);
+    // this.trackIndexToDelete = this.playlist.tracks.findIndex(item => item.id === trackId);
     // this.playlist = this.playlist.tracks.splice(this.trackIndexToDelete, 1);
-    // console.log(this.playlist.tracks.length, 'length 2');
     // this.playlist.tracks.push(track);
-    // this.trackToDelete(trackId);
-    return this.http.delete(this.playlistServerUrl + playlistId + '/tracks/' + this.trackIndexToDelete, this.options)
-    // .pipe(
-    //   map(response => response)
-    // )
+    return this.http.delete(this.tracksServerUrl + trackId)
     // tslint:disable-next-line: no-shadowed-variable
-    .subscribe(playlist => playlist
+    .subscribe( playlist => {
+      this.http.patch(this.playlistServerUrl + playlistId, playlist);
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['playlist/' + playlistId]);
+    });
+    }
+
     );
   }
 
